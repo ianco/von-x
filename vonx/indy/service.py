@@ -403,6 +403,7 @@ class IndyService(ServiceBase):
         Perform synchronization on a connection object
         """
         agent = self._agents[connection.agent_id]
+        print('Syncing', agent)
 
         if not connection.synced:
             if not connection.created:
@@ -412,9 +413,11 @@ class IndyService(ServiceBase):
                 if not agent_cfg:
                     agent_cfg = {}
                 agent_cfg["config_root"] = self._env.get("CONFIG_ROOT")
+                print(agent_cfg)
                 await connection.create(agent_cfg)
 
             try:
+                print('Connection', connection)
                 if not connection.opened:
                     await connection.open(self)
 
