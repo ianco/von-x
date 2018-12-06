@@ -260,6 +260,26 @@ async def construct_proof(request, holder_id: str = None):
     return response
 
 
+async def render_credential(request):
+    """
+    Redirect to the form url (route) for the given credential
+
+    Expected url parameter:
+        - connection_id - the connection to request credentials
+
+    Expected query parameters are:
+        - credential_ids - id numbers of credentials to use for a proof request (if applicable)
+        - schema_name    - name of the schema to render 
+        - schema_version - version of the schema to render 
+        - issuer_did     - DID of the schema issuer
+
+    Returns: Re-direct to the url to the credential form (including the above provided parameters)
+    """
+
+    location = "TODO change me"
+    print("Redirecting --> ", location)
+    raise web.HTTPFound(location=location)
+
 async def search_credential(request):
     """
     Gets credentials for a given organization
@@ -329,25 +349,25 @@ async def filter_credential(request):
         ret = {"success": False, "result": str(e)}
     return web.json_response(ret)
 
-def _filter_by_dependent_proof_requests(form, proof, creds, fetch_all=False):
-    return_creds = {}
-    for cred in creds:
-        for schema in proof["schemas"]:
-            if schema['key']['did'] == cred['issuer_did'] and schema['key']['name'] == cred['schema_name'] and schema['key']['version'] == cred['schema_version']:
-                key = schema['key']['did'] + '::' + schema['key']['name'] + '::' + schema['key']['version']
-                if fetch_all:
-                    if not key in return_creds:
-                        return_creds[key] = []
-                    return_creds[key].append(cred)
-                else:
-                    if not key in return_creds:
-                        return_creds[key] = []
-                        return_creds[key].append(cred)
-                    else:
-                        if cred['effective_date'] > return_creds[key][0]['effective_date']:
-                            return_creds[key][0] = cred
-
-    return return_creds
+#def _filter_by_dependent_proof_requests(form, proof, creds, fetch_all=False):
+#    return_creds = {}
+#    for cred in creds:
+#        for schema in proof["schemas"]:
+#            if schema['key']['did'] == cred['issuer_did'] and schema['key']['name'] == cred['schema_name'] and schema['key']['version'] == cred['schema_version']:
+#                key = schema['key']['did'] + '::' + schema['key']['name'] + '::' + schema['key']['version']
+#                if fetch_all:
+#                    if not key in return_creds:
+#                        return_creds[key] = []
+#                    return_creds[key].append(cred)
+#                else:
+#                    if not key in return_creds:
+#                        return_creds[key] = []
+#                        return_creds[key].append(cred)
+#                    else:
+#                        if cred['effective_date'] > return_creds[key][0]['effective_date']:
+#                            return_creds[key][0] = cred
+#
+#    return return_creds
 
 
 async def get_credential_dependencies(request):
