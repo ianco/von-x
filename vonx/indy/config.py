@@ -26,12 +26,13 @@ from distutils.version import LooseVersion
 from enum import Enum
 import logging
 from typing import Mapping, Sequence
+from ctypes import CDLL
 
 from von_anchor import HolderProver, Verifier
 from von_anchor.anchor.base import BaseAnchor
 from von_anchor.anchor.demo import BCRegistrarAnchor, OrgHubAnchor
 from von_anchor.nodepool import NodePool
-from von_anchor.wallet import Wallet, register_wallet_storage_library
+from von_anchor.wallet import Wallet #, register_wallet_storage_library
 from von_anchor.util import schema_id
 
 from indy.error import IndyError, ErrorCode
@@ -682,12 +683,14 @@ class WalletCfg:
 
     async def load_storage_library(self, storage_type):
         # load storage library for postgres
-        if storage_type == "postgres":
+        if storage_type == "postgres_storage":
             try:
-                await register_wallet_storage_library(
-                    storage_type,
-                    "libindystrgpostgres.so",
-                    "postgreswallet_fn_")
+                stg_lib = CDLL("libindystrgpostgres.so")
+                indy_err = stg_lib.postgresstorage_init()
+                #await register_wallet_storage_library(
+                #    storage_type,
+                #    "libindystrgpostgres.so",
+                #    "postgreswallet_fn_")
             except IndyError as x_indy:
                 if x_indy.error_code == ErrorCode.WalletTypeAlreadyRegisteredError:
                     LOGGER.info('Wallet already exists: %s', self.name)
