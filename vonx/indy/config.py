@@ -337,7 +337,6 @@ class ConnectionCfg:
             service: the Indy service handling this connection
         """
         if not self.opened:
-            print('Opening service', service)
             await self._instance.open(service)
             self.opened = True
 
@@ -346,7 +345,6 @@ class ConnectionCfg:
         Perform synchronization of the connection instance
         """
         if not self.synced:
-            print('Syncing service')
             await self._instance.sync()
             self.synced = True
 
