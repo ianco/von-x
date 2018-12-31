@@ -1247,6 +1247,11 @@ class IndyService(ServiceBase):
         Resolve a did to an endpoint
         """
 
+        print("In _get_endpoint()", did)
+        for _, agent in self._agents.items():
+            endpoint = await agent.get_endpoint(did)
+            print(agent, endpoint)
+            
         for _, agent in self._agents.items():
             if not agent.synced:
                 raise IndyConfigError("Agent is not yet synchronized: {}".format(agent.agent_id))
