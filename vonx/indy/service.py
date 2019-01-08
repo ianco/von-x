@@ -1121,18 +1121,12 @@ class IndyService(ServiceBase):
         """
         Request dependency graph for a credential
         """
-        print('schema_name', schema_name)
-        print('schema_version', schema_version)
-        print('origin_did', origin_did)
-        print('dependency_graph', dependency_graph)
-
         if not visited_dids:
             visited_dids = []
 
         did_agent = None
         if origin_did:
             for agent in self._agents.values():
-                print('   agent.did', agent.did)
                 if agent.did == origin_did:
                     did_agent = agent
                     break
@@ -1140,13 +1134,10 @@ class IndyService(ServiceBase):
         if not did_agent:
             did_agent = next(iter(self._agents.values()))
 
-        print('did_agent.did', did_agent.did)
-
         if not did_agent.synced:
             raise IndyConfigError("Agent is not yet synchronized: {}".format(did_agent.agent_id))
 
         this_did = origin_did or did_agent.did
-        print('this_did', this_did)
 
         dependency = CredentialDependency(
             schema_name,
@@ -1266,20 +1257,13 @@ class IndyService(ServiceBase):
         Resolve a did to an endpoint
         """
 
-        print("In _get_endpoint()", did)
         for _, agent in self._agents.items():
             endpoint = await agent.get_endpoint(did)
-            print(agent, endpoint)
             
         for _, agent in self._agents.items():
-            print('  agent.agent_id', agent.agent_id)
-
-        for _, agent in self._agents.items():
-            print('  agent.agent_id', agent.agent_id)
             if not agent.synced:
                 raise IndyConfigError("Agent is not yet synchronized: {}".format(agent.agent_id))
             endpoint = await agent.get_endpoint(did)
-            print('  endpoint', endpoint)
             return messages.Endpoint(endpoint)
 
     async def _verify_proof(self, verifier_id: str, proof_req: messages.ProofRequest,
