@@ -1115,7 +1115,7 @@ class IndyService(ServiceBase):
 
         return return_creds
 
-    async def _get_credential_dependencies(self, schema_name: str, schema_version: str,
+    async def _get_credential_dependencies(self, method: str, schema_name: str, schema_version: str,
                                            origin_did: str, dependency_graph: dict,
                                            visited_dids) -> messages.CredentialDependencies:
 
@@ -1150,7 +1150,7 @@ class IndyService(ServiceBase):
         )
 
         # TODO don't recurse if the original request was a GET rather than a POST
-        if origin_did and did_agent.did != origin_did and origin_did not in visited_dids:
+        if method == 'POST' and origin_did and did_agent.did != origin_did and origin_did not in visited_dids:
             # If we are given a did and it is not this agent's did, we attempt to
             # hop to the next agent and continue to recurse
             LOGGER.debug("Agent with did = %s not yet visited, attempting hop.", origin_did)
@@ -1203,6 +1203,7 @@ class IndyService(ServiceBase):
                     LOGGER.debug("Await get-credential-dependencies for foreign schema %s", dep.schema_name)
 
                     dependency_dependencies = await self._get_credential_dependencies(
+                        method, 
                         dep.schema_name,
                         dep.schema_version,
                         dep.origin_did,
@@ -1244,6 +1245,7 @@ class IndyService(ServiceBase):
 
                                     LOGGER.debug("Await get-credential-dependencies for known schema %s", schema_name)
                                     dependency_dependencies = await self._get_credential_dependencies(
+                                        method,
                                         dep.name,
                                         dep.version,
                                         dep.origin_did,
@@ -1533,6 +1535,7 @@ class IndyService(ServiceBase):
         elif isinstance(request, messages.CredentialDependenciesReq):
             try:
                 reply = await self._get_credential_dependencies(
+                    request.method,
                     request.schema_name,
                     request.schema_version,
                     request.origin_did,
