@@ -1155,7 +1155,7 @@ class IndyService(ServiceBase):
             dependency_graph
         )
 
-        # TODO don't recurse if the original request was a GET rather than a POST
+        # don't recurse if the original request was a GET rather than a POST
         if method == 'POST' and origin_did and did_agent.did != origin_did and origin_did not in visited_dids:
             # If we are given a did and it is not this agent's did, we attempt to
             # hop to the next agent and continue to recurse

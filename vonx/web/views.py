@@ -363,7 +363,6 @@ async def get_credential_dependencies(request):
 
     Returns: A graph of the credential's dependencies in json
     """
-    print("get_credential_dependencies", request.method)
     schema_name = request.query.get("schema_name")
     schema_version = request.query.get("schema_version")
     origin_did = request.query.get("origin_did")
