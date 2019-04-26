@@ -46,7 +46,7 @@ async def render_form(form: dict, request: web.Request) -> web.Response:
         form: The form definition
         request: The request received by aiohttp
     """
-    (tpl_name, tpl_vars) = render_form_vars_int(form, request)
+    (tpl_name, tpl_vars) = await render_form_vars_int(form, request)
     return aiohttp_jinja2.render_template(tpl_name, request, tpl_vars)
 
 
@@ -64,7 +64,7 @@ async def render_form_vars(form: dict, request: web.Request) -> web.Response:
         form: The form definition
         request: The request received by aiohttp
     """
-    (tpl_name, tpl_vars) = render_form_vars_int(form, request)
+    (tpl_name, tpl_vars) = await render_form_vars_int(form, request)
     return json.dumps(tpl_vars)
 
 
