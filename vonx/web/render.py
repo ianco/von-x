@@ -65,6 +65,7 @@ async def render_form_vars(form: dict, request: web.Request) -> web.Response:
         request: The request received by aiohttp
     """
     (tpl_name, tpl_vars) = await render_form_vars_int(form, request)
+    tpl_vars['path'] = str(tpl_vars['path'])
     return json.dumps(tpl_vars)
 
 
