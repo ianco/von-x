@@ -21,6 +21,7 @@ Handle rendering of issue-credential forms
 
 
 import logging
+import json
 
 from aiohttp import web
 import aiohttp_jinja2
@@ -45,6 +46,29 @@ async def render_form(form: dict, request: web.Request) -> web.Response:
         form: The form definition
         request: The request received by aiohttp
     """
+    tpl_vars = render_form_vars_int(form, request)
+    return aiohttp_jinja2.render_template(tpl_name, request, tpl_vars)
+
+
+async def render_form_vars(form: dict, request: web.Request) -> web.Response:
+    """
+    Render a form definition by:
+
+        - performing a proof request if needed,
+        - collecting any values needed from the proof request,
+        - adding any user input,
+        - populating template variables,
+        - returning the template variables
+
+    Args:
+        form: The form definition
+        request: The request received by aiohttp
+    """
+    tpl_vars = render_form_vars_int(form, request)
+    return json.dumps(tpl_vars)
+
+
+async def render_form_vars_int(form: dict, request: web.Request) -> web.Response:
     #pylint: disable=broad-except
     proof_meta = form.get("proof_request")
     proof_response = None
@@ -122,4 +146,4 @@ async def render_form(form: dict, request: web.Request) -> web.Response:
 
     print("tpl_vars", tpl_vars)
 
-    return aiohttp_jinja2.render_template(tpl_name, request, tpl_vars)
+    return tpl_vars

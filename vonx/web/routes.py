@@ -27,7 +27,7 @@ from aiohttp import web, ClientRequest
 from ..common.manager import ConfigServiceManager
 from . import views
 from .process import process_form
-from .render import render_form
+from .render import render_form, render_form_vars
 
 LOGGER = logging.getLogger(__name__)
 
@@ -164,6 +164,9 @@ class RouteDefinitions:
         routes.extend(
             web.view(form['path'], form_handler(form), name=form['name'])
             for form in self.forms)
+        routes.extend(
+            web.view(form['path']+'.vars', form_vars_handler(form), name=form['name']+'.vars')
+            for form in self.forms)
 
         return routes
 
@@ -191,5 +194,15 @@ def form_handler(form: dict) -> Coroutine:
             return await render_form(form, request)
         elif request.method == 'POST':
             return await process_form(form, request)
+        return web.Response(status=405)
+    return _process
+
+def form_vars_handler(form: dict) -> Coroutine:
+    """
+    Return a request handler for processing form routes
+    """
+    async def _process(request: ClientRequest):
+        if request.method == 'GET' or request.method == 'HEAD':
+            return await render_form_vars(form, request)
         return web.Response(status=405)
     return _process
