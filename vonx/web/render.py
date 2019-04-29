@@ -95,7 +95,6 @@ async def render_form_vars_int(form: dict, request: web.Request) -> web.Response
             org_name = request.query.get("org_id")
             if org_name:
                 creds = await client.get_filtered_credentials(proof_meta["connection_id"], org_name, proof_meta["id"], False)
-                print(creds)
                 cred_ids = ''
                 for i in range(len(creds)):
                     if i > 0:
@@ -144,7 +143,5 @@ async def render_form_vars_int(form: dict, request: web.Request) -> web.Response
         tpl_vars["hidden"].append("connection_id")
     tpl_vars["inputs"]["connection_id"] = form.get("connection_id", "")
     tpl_vars["path"] = request.rel_url
-
-    print("tpl_vars", tpl_vars)
 
     return (tpl_name, tpl_vars)
