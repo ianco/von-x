@@ -46,12 +46,14 @@ def load_cred_request(form, attr_names, request: web.Request) -> dict:
     for attribute in map_attr:
         attr_name = attribute.get("name")
         from_type = attribute.get("from", "request")
+        print(" >>> check attributes", attr_name, from_type)
         # Handle getting value from request data
         if from_type == "request":
             source = attribute.get("source", attr_name)
             cred[attr_name] = request.get(source)
         # Handle getting value from helpers (function defined in config)
         elif from_type == "helper":
+            print(" >>> from helper", attribute["source"])
             helper = getattr(helpers, attribute["source"], None)
             if not helper:
                 raise ValueError("Cannot find helper '{}'".format(attribute["source"]))
