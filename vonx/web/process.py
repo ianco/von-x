@@ -37,6 +37,7 @@ def load_cred_request(form, attr_names, request: web.Request) -> dict:
 
     cred = {}
     mapping = form.get("mapping") or {}
+    print(" >>>>> mapping:", mapping)
     if mapping.get("fill_defaults", True):
         for attr in attr_names:
             cred[attr] = request.get(attr)
