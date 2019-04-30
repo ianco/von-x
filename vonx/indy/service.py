@@ -700,6 +700,7 @@ class IndyService(ServiceBase):
             fixed_data = self._fix_cred_data(cred_type["definition"], cred_data)
             cred = await self._create_cred(issuer, cred_request, fixed_data)
             log_json("Created cred:", cred, LOGGER)
+            print(" >>> Created cred:", cred)
             return cred
 
         if batch:
