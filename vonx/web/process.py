@@ -110,6 +110,7 @@ async def process_form(form, request: web.Request) -> web.Response:
             stored = await client.issue_credential(
                 result.issuer_id, result.schema_name, result.schema_version,
                 result.origin_did, params)
+            print(" >>> stored:", stored)
         except IndyClientError as e:
             ret = {"success": False, "result": str(e)}
         else:
