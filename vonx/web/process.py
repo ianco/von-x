@@ -114,7 +114,11 @@ async def process_form(form, request: web.Request) -> web.Response:
         except IndyClientError as e:
             ret = {"success": False, "result": str(e)}
         else:
-            ret = {"success": True, "result": stored.cred_id}
+            # include the raw credential data in the response
+            credential = {}
+            for attr in stored.cred.cred_data.values:
+                credential[attr] = stored.cred.cred_data.values[attr]['raw']
+            ret = {"success": True, "result": stored.cred_id, "credential": credential}
 
         #if ret["success"]:
         #    return response.html('<h3>Registration successful</h3>')
