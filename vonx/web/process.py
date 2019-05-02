@@ -117,9 +117,9 @@ async def process_form(form, request: web.Request) -> web.Response:
             # include the raw credential data in the response
             print(" >>> stored.cred.cred_data:", stored.cred.cred_data)
             credential = {}
-            for attr,val in stored.cred.cred_data.values().items():
-                print(" >>> attr, val:", attr, val)
-                credential[attr] = val['raw']
+            for key,val in stored.cred.cred_data.values():
+                print(" >>> key,val:", key, val)
+                credential[key] = val['raw']
             ret = {"success": True, "result": stored.cred_id, "credential": credential}
 
         #if ret["success"]:
