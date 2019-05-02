@@ -46,7 +46,7 @@ async def render_form(form: dict, request: web.Request) -> web.Response:
         form: The form definition
         request: The request received by aiohttp
     """
-    tpl_vars = render_form_vars_int(form, request)
+    (tpl_name, tpl_vars) = await render_form_vars_int(form, request)
     return aiohttp_jinja2.render_template(tpl_name, request, tpl_vars)
 
 
@@ -64,8 +64,9 @@ async def render_form_vars(form: dict, request: web.Request) -> web.Response:
         form: The form definition
         request: The request received by aiohttp
     """
-    tpl_vars = render_form_vars_int(form, request)
-    return json.dumps(tpl_vars)
+    (tpl_name, tpl_vars) = await render_form_vars_int(form, request)
+    tpl_vars['path'] = str(tpl_vars['path'])
+    return web.json_response(tpl_vars)
 
 
 async def render_form_vars_int(form: dict, request: web.Request) -> web.Response:
@@ -94,7 +95,6 @@ async def render_form_vars_int(form: dict, request: web.Request) -> web.Response
             org_name = request.query.get("org_id")
             if org_name:
                 creds = await client.get_filtered_credentials(proof_meta["connection_id"], org_name, proof_meta["id"], False)
-                print(creds)
                 cred_ids = ''
                 for i in range(len(creds)):
                     if i > 0:
@@ -144,6 +144,4 @@ async def render_form_vars_int(form: dict, request: web.Request) -> web.Response
     tpl_vars["inputs"]["connection_id"] = form.get("connection_id", "")
     tpl_vars["path"] = request.rel_url
 
-    print("tpl_vars", tpl_vars)
-
-    return tpl_vars
+    return (tpl_name, tpl_vars)
