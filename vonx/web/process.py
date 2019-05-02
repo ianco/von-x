@@ -103,30 +103,18 @@ async def process_form(form, request: web.Request) -> web.Response:
             LOGGER.error("Error {}".format(msg))
             return web.Response(reason=msg, status=400)
 
-        print(" >>> result.attr_names:", result.attr_names)
-        print(" >>> inputs:", inputs)
         params = load_cred_request(form, result.attr_names, inputs)
-        print(" >>> params:", params)
         #return web.json_response(params)
 
         try:
             stored = await client.issue_credential(
                 result.issuer_id, result.schema_name, result.schema_version,
                 result.origin_did, params)
-            print(" >>> stored:", stored)
         except IndyClientError as e:
             ret = {"success": False, "result": str(e)}
         else:
             # include the raw credential data in the response
-            print(" >>> stored.cred.cred_data.values():", stored.cred.cred_data.values())
-            credential = {}
-            for i in range(len(list(stored.cred.cred_data.values()))):
-                item = list(stored.cred.cred_data.values())[i]
-                print(" >>>", i, item)
-                if isinstance(item, dict):
-                    print(" >>> key,val:", key, val)
-                credential[key] = val['raw']
-            ret = {"success": True, "result": stored.cred_id, "credential": credential}
+            ret = {"success": True, "result": stored.cred_id, "credential": json.dumps(params)}
 
         #if ret["success"]:
         #    return response.html('<h3>Registration successful</h3>')
