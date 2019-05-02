@@ -20,7 +20,6 @@ Handle processing of issue-credential forms
 """
 
 import logging
-import json
 
 from aiohttp import web
 
@@ -115,7 +114,7 @@ async def process_form(form, request: web.Request) -> web.Response:
             ret = {"success": False, "result": str(e)}
         else:
             # include the raw credential data in the response
-            ret = {"success": True, "result": stored.cred_id, "credential": json.dumps(params)}
+            ret = {"success": True, "result": stored.cred_id, "credential": params}
 
         #if ret["success"]:
         #    return response.html('<h3>Registration successful</h3>')
