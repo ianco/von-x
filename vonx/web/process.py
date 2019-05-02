@@ -103,7 +103,10 @@ async def process_form(form, request: web.Request) -> web.Response:
             LOGGER.error("Error {}".format(msg))
             return web.Response(reason=msg, status=400)
 
+        print(" >>> result.attr_names:", result.attr_names)
+        print(" >>> inputs:", inputs)
         params = load_cred_request(form, result.attr_names, inputs)
+        print(" >>> params:", params)
         #return web.json_response(params)
 
         try:
@@ -116,10 +119,12 @@ async def process_form(form, request: web.Request) -> web.Response:
         else:
             # include the raw credential data in the response
             print(" >>> stored.cred.cred_data.values():", stored.cred.cred_data.values())
-            print(" >>> stored.cred.cred_data.values:", stored.cred.cred_data.values)
             credential = {}
-            for key,val in stored.cred.cred_data.values:
-                print(" >>> key,val:", key, val)
+            for i in range(len(list(stored.cred.cred_data.values()))):
+                item = list(stored.cred.cred_data.values())[i]
+                print(" >>>", i, item)
+                if isinstance(item, dict):
+                    print(" >>> key,val:", key, val)
                 credential[key] = val['raw']
             ret = {"success": True, "result": stored.cred_id, "credential": credential}
 
