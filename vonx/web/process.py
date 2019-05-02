@@ -20,6 +20,7 @@ Handle processing of issue-credential forms
 """
 
 import logging
+import json
 
 from aiohttp import web
 
