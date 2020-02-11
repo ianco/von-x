@@ -31,7 +31,8 @@ from von_anchor import HolderProver, Verifier
 from von_anchor.anchor.base import BaseAnchor
 from von_anchor.anchor.demo import RegistrarAnchor, OrgHubAnchor
 from von_anchor.nodepool import NodePool
-from von_anchor.wallet import Wallet, register_wallet_storage_library
+from von_anchor.wallet.wallet import Wallet
+from von_anchor.wallet.manager import WalletManager
 from von_anchor.util import schema_id
 
 from indy.error import IndyError, ErrorCode
@@ -680,7 +681,7 @@ class WalletCfg:
         # load storage library for postgres
         if storage_type == "postgres_storage":
             try:
-                await register_wallet_storage_library(
+                await WalletManager.register_storage_library(
                     storage_type,
                     "libindystrgpostgres.so",
                     "postgresstorage_init")
