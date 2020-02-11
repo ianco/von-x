@@ -29,7 +29,7 @@ from typing import Mapping, Sequence
 
 from von_anchor import HolderProver, Verifier
 from von_anchor.anchor.base import BaseAnchor
-from von_anchor.anchor.demo import BCRegistrarAnchor, OrgHubAnchor
+from von_anchor.anchor.demo import RegistrarAnchor, OrgHubAnchor
 from von_anchor.nodepool import NodePool
 from von_anchor.wallet import Wallet, register_wallet_storage_library
 from von_anchor.util import schema_id
@@ -151,7 +151,7 @@ class AgentCfg:
             cls = None
             params = {"cfg": self.extended_config}
             if self.agent_type == AgentType.issuer:
-                cls = BCRegistrarAnchor # combines Origin and Issuer
+                cls = RegistrarAnchor # combines Origin and Issuer
             elif self.agent_type == AgentType.holder:
                 cls = HolderProver
             elif self.agent_type == AgentType.verifier:
